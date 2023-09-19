@@ -1,25 +1,14 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 
 namespace MovieReviewConsoleApplication
 {
     internal class Movie
     {
-        [Key]
+        // No data annotations needed
         public int Id { get; set; }
-
-        [Required]
-        [MaxLength(100)]
         public string? Title { get; set; }
-
-        [Required]
         public int Year { get; set; }
-
-        [Required]
-        [MaxLength(50)]
         public string? Director { get; set; }
-
-        [Required]
-        [MaxLength(50)]
         public string? Country { get; set; }
 
         // Navigation property to access the reviews of this movie
