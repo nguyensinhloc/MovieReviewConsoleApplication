@@ -801,10 +801,6 @@ namespace MovieReviewConsoleApplication
                         FilterMovies(context);
                         break;
                     case 4:
-                        // If the user chooses to exit the application, call the ExitApplication method
-                        ExitApplication();
-                        break;
-                    case 5:
                         //If the user chooses to import from JSON files
                         // Ask the user to enter the directory path
                         Console.WriteLine("Enter the directory path where the JSON files are located:");
@@ -814,6 +810,10 @@ namespace MovieReviewConsoleApplication
 
                         // Call the Seed method to populate the database with sample data from the user-inputted directory
                         DatabaseSeeder.Seed(context, directory);
+                    case 5:
+                        // If the user chooses to exit the application, call the ExitApplication method
+                        ExitApplication();
+                        break;
                     default:
                         // If the user enters an invalid choice, display an error message and continue the loop
                         Console.WriteLine("Invalid choice. Please try again.");
