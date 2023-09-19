@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 
 namespace MovieReviewConsoleApplication
 {
@@ -19,5 +19,60 @@ namespace MovieReviewConsoleApplication
         // DbSet properties to access the tables in the database
         public DbSet<Movie> Movies { get; set; }
         public DbSet<Review> Reviews { get; set; }
+
+        // Override the OnModelCreating method to configure the model using fluent API
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            // Configure the Movie entity
+            modelBuilder.Entity<Movie>()
+                .HasKey(m => m.Id) // Specify the primary key
+                .HasIndex(m => m.Title) // Create an index on the title column
+                .IsUnique(); // Ensure that the title is unique
+
+            modelBuilder.Entity<Movie>()
+                .Property(m => m.Title) // Configure the title property
+                .IsRequired() // Make it required
+                .HasMaxLength(100); // Set the maximum length to 100
+
+            modelBuilder.Entity<Movie>()
+                .Property(m => m.Year) // Configure the year property
+                .IsRequired(); // Make it required
+
+            modelBuilder.Entity<Movie>()
+                .Property(m => m.Director) // Configure the director property
+                .IsRequired() // Make it required
+                .HasMaxLength(50); // Set the maximum length to 50
+
+            modelBuilder.Entity<Movie>()
+                .Property(m => m.Country) // Configure the country property
+                .IsRequired() // Make it required
+                .HasMaxLength(50); // Set the maximum length to 50
+
+            modelBuilder.Entity<Movie>()
+                .HasMany(m => m.Reviews) // Configure the relationship with Review entity
+                .WithOne(r => r.Movie) // Specify that one movie has many reviews and one review has one movie
+                .HasForeignKey(r => r.MovieId) // Specify the foreign key in Review entity
+                .OnDelete(DeleteBehavior.Cascade); // Specify that deleting a movie will also delete its reviews
+
+            // Configure the Review entity
+            modelBuilder.Entity<Review>()
+                .HasKey(r => r.Id); // Specify the primary key
+
+            modelBuilder.Entity<Review>()
+                .Property(r => r.Title) // Configure the title property
+                .IsRequired() // Make it required
+                .HasMaxLength(100); // Set the maximum length to 100
+
+            modelBuilder.Entity<Review>()
+                .Property(r => r.Content) // Configure the content property
+                .IsRequired(); // Make it required
+
+            modelBuilder.Entity<Review>()
+                .Property(r => r.Rating) // Configure the rating property
+                .IsRequired() // Make it required
+                .HasRange(1, 5); // Set the range from 1 to 5
+
+            base.OnModelCreating(modelBuilder); // Call the base method at the end
+        }
     }
 }
