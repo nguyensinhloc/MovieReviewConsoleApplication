@@ -748,16 +748,17 @@ namespace MovieReviewConsoleApplication
             Console.WriteLine("1. View list of movies");
             Console.WriteLine("2. Add new movie");
             Console.WriteLine("3. Filter movies by");
-            Console.WriteLine("4. Exit application");
+            Console.WriteLine("4. Import from JSON files");
+            Console.WriteLine("5. Exit application");
 
             // Prompt the user to enter a choice
-            Console.WriteLine("Please enter your choice (1-4):");
+            Console.WriteLine("Please enter your choice (1-5):");
 
             // Get the user input and validate it
             string input = Console.ReadLine();
-            if (int.TryParse(input, out int choice) && choice >= 1 && choice <= 4)
+            if (int.TryParse(input, out int choice) && choice >= 1 && choice <= 5)
             {
-                // If the user input is a valid integer between 1 and 4, return it as the choice
+                // If the user input is a valid integer between 1 and 5, return it as the choice
                 return choice;
             }
             else
@@ -777,16 +778,7 @@ namespace MovieReviewConsoleApplication
 
             // Create a MovieReviewContext object to access the database
             using MovieReviewContext context = new(connectionString);
-
-            // Ask the user to enter the directory path
-            Console.WriteLine("Enter the directory path where the JSON files are located:");
-
-            // Get the user input and store it in a string variable
-            string? directory = Console.ReadLine();
-
-            // Call the Seed method to populate the database with sample data from the user-inputted directory
-            DatabaseSeeder.Seed(context, directory);
-
+            
             // Loop until the user chooses to exit the application
             while (true)
             {
@@ -812,6 +804,16 @@ namespace MovieReviewConsoleApplication
                         // If the user chooses to exit the application, call the ExitApplication method
                         ExitApplication();
                         break;
+                    case 5:
+                        //If the user chooses to import from JSON files
+                        // Ask the user to enter the directory path
+                        Console.WriteLine("Enter the directory path where the JSON files are located:");
+
+                        // Get the user input and store it in a string variable
+                        string? directory = Console.ReadLine();
+
+                        // Call the Seed method to populate the database with sample data from the user-inputted directory
+                        DatabaseSeeder.Seed(context, directory);
                     default:
                         // If the user enters an invalid choice, display an error message and continue the loop
                         Console.WriteLine("Invalid choice. Please try again.");
