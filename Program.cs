@@ -810,6 +810,7 @@ namespace MovieReviewConsoleApplication
 
                         // Call the Seed method to populate the database with sample data from the user-inputted directory
                         DatabaseSeeder.Seed(context, directory);
+                        break;
                     case 5:
                         // If the user chooses to exit the application, call the ExitApplication method
                         ExitApplication();
