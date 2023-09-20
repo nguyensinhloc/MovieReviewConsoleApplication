@@ -25,9 +25,8 @@ namespace MovieReviewConsoleApplication
         {
             // Configure the Movie entity
             modelBuilder.Entity<Movie>()
-                .HasKey(m => m.Id) // Specify the primary key
-                .HasIndex(m => m.Title) // Create an index on the title column
-                .IsUnique(); // Ensure that the title is unique
+            .HasKey(m => m.Id) // Specify the primary key
+            .HasAlternateKey(m => m.Title); // Create a unique index on the title column
 
             modelBuilder.Entity<Movie>()
                 .Property(m => m.Title) // Configure the title property
@@ -70,7 +69,7 @@ namespace MovieReviewConsoleApplication
             modelBuilder.Entity<Review>()
                 .Property(r => r.Rating) // Configure the rating property
                 .IsRequired() // Make it required
-                .HasRange(1, 5); // Set the range from 1 to 5
+                .HasCheckConstraint("CK_Rating", "[Rating] BETWEEN 1 AND 5"); // Set the check constraint
 
             base.OnModelCreating(modelBuilder); // Call the base method at the end
         }
