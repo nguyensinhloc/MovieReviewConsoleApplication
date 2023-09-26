@@ -18,7 +18,12 @@ namespace MovieReviewConsoleApplication
         }
 
         // DbSet properties to access the tables in the database
-        public DbSet<Movie> Movies { get; set; }
+        public DbSet<Movie> Movies { 
+           
+            get;
+            
+            set; 
+        }
         public DbSet<Review> Reviews { get; set; }
 
         // Override the OnModelCreating method to configure the model using fluent API
@@ -27,27 +32,28 @@ namespace MovieReviewConsoleApplication
             // Configure the Movie entity
             modelBuilder.Entity<Movie>()
             .HasKey(m => m.Id); // Specify the primary key
-            modelBuilder.Entity<Movie>()
-            .HasAlternateKey(m => m.Title); // Create a unique index on the title column
+            //modelBuilder.Entity<Movie>().HasAlternateKey(m => m.Title); // Create a unique index on the title column
 
             modelBuilder.Entity<Movie>()
                 .Property(m => m.Title) // Configure the title property
                 .IsRequired() // Make it required
-                .HasMaxLength(100); // Set the maximum length to 100
+                .HasMaxLength(200).HasColumnType("nvarchar(200)"); // Set the maximum length to 100
+          
 
             modelBuilder.Entity<Movie>()
                 .Property(m => m.Year) // Configure the year property
-                .IsRequired(); // Make it required
+                .IsRequired().HasColumnType("int"); // Make it required
+
 
             modelBuilder.Entity<Movie>()
                 .Property(m => m.Director) // Configure the director property
                 .IsRequired() // Make it required
-                .HasMaxLength(50); // Set the maximum length to 50
+                .HasMaxLength(50).HasColumnType("nvarchar(50)"); // Set the maximum length to 50
 
             modelBuilder.Entity<Movie>()
                 .Property(m => m.Country) // Configure the country property
                 .IsRequired() // Make it required
-                .HasMaxLength(50); // Set the maximum length to 50
+                .HasMaxLength(50).HasColumnType("nvarchar(50)"); // Set the maximum length to 50
 
             modelBuilder.Entity<Movie>()
                 .HasMany(m => m.Reviews) // Configure the relationship with Review entity
@@ -67,11 +73,11 @@ namespace MovieReviewConsoleApplication
             modelBuilder.Entity<Review>()
                 .Property(r => r.Content) // Configure the content property
                 .IsRequired(); // Make it required
-
-            modelBuilder.Entity<Review>().HasCheckConstraint("CK_Rating", "[Rating] BETWEEN 1 AND 5") // Set the check constraint
+            modelBuilder.Entity<Review>()// Set the check constraint
                 .Property(r => r.Rating) // Configure the rating property
-                .IsRequired(); // Make it required 
-                
+                .IsRequired();
+            modelBuilder.Entity<Review>().ToTable("CK_Rating", "[Rating] BETWEEN 1 AND 5"); // Make it required 
+
             base.OnModelCreating(modelBuilder); // Call the base method at the end
         }
     }
