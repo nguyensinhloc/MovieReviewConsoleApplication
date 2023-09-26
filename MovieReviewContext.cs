@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 
+
 namespace MovieReviewConsoleApplication
 {
     internal class MovieReviewContext : DbContext
@@ -25,7 +26,8 @@ namespace MovieReviewConsoleApplication
         {
             // Configure the Movie entity
             modelBuilder.Entity<Movie>()
-            .HasKey(m => m.Id) // Specify the primary key
+            .HasKey(m => m.Id); // Specify the primary key
+            modelBuilder.Entity<Movie>()
             .HasAlternateKey(m => m.Title); // Create a unique index on the title column
 
             modelBuilder.Entity<Movie>()
@@ -66,11 +68,10 @@ namespace MovieReviewConsoleApplication
                 .Property(r => r.Content) // Configure the content property
                 .IsRequired(); // Make it required
 
-            modelBuilder.Entity<Review>()
+            modelBuilder.Entity<Review>().HasCheckConstraint("CK_Rating", "[Rating] BETWEEN 1 AND 5") // Set the check constraint
                 .Property(r => r.Rating) // Configure the rating property
-                .IsRequired() // Make it required
-                .HasCheckConstraint("CK_Rating", "[Rating] BETWEEN 1 AND 5"); // Set the check constraint
-
+                .IsRequired(); // Make it required 
+                
             base.OnModelCreating(modelBuilder); // Call the base method at the end
         }
     }
