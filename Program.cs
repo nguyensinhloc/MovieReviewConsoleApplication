@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 
 namespace MovieReviewConsoleApplication
 {
@@ -9,7 +9,7 @@ namespace MovieReviewConsoleApplication
         {
             // Initialize variables to store the current page and the total number of pages
             int currentPage = 1;
-            int totalPages = (int)Math.Ceiling(context.Movies.Count() / 10.0);
+            int totalPages = (int)Math.Ceiling(context.Movies.ToList().Count/ 10.0);
 
             // Loop until the user chooses to go back to the main menu
             while (true)
@@ -37,7 +37,7 @@ namespace MovieReviewConsoleApplication
 
                 // Get the user input and validate it
                 string input = Console.ReadLine();
-                if (input.ToUpper() == "N")
+                if (input!.ToUpper() == "N")
                 {
                     // If the user chooses to go to the next page, increment the current page and check if it is valid
                     currentPage++;
@@ -98,12 +98,12 @@ namespace MovieReviewConsoleApplication
                 Movie? movie = context.Movies.Include(m => m.Reviews).FirstOrDefault(m => m.Id == movieId);
 
                 // Display the movie information in a table format
-                Console.WriteLine("{0,-15}{1,-30}", "Id", movie.Id);
+                Console.WriteLine("{0,-15}{1,-30}", "Id", movie!.Id);
                 Console.WriteLine("{0,-15}{1,-30}", "Title", movie.Title);
                 Console.WriteLine("{0,-15}{1,-30}", "Year", movie.Year);
                 Console.WriteLine("{0,-15}{1,-30}", "Director", movie.Director);
                 Console.WriteLine("{0,-15}{1,-30}", "Country", movie.Country);
-                Console.WriteLine("{0,-15}{1,-30}", "Number of reviews", movie.Reviews.Count);
+                Console.WriteLine("{0,-15}{1,-30}", "Number of reviews", movie.Reviews!.Count);
                 Console.WriteLine(new string('-', 45));
 
                 // Display the options for the movie
@@ -111,7 +111,7 @@ namespace MovieReviewConsoleApplication
 
                 // Get the user input and validate it
                 string input = Console.ReadLine();
-                if (input.ToUpper() == "E")
+                if (input!.ToUpper() == "E")
                 {
                     // If the user chooses to edit the movie information, call another method to do so
                     EditMovieInformation(context, movieId);
@@ -158,7 +158,7 @@ namespace MovieReviewConsoleApplication
             Movie? movie = context.Movies.FirstOrDefault(m => m.Id == movieId);
 
             // Display the current movie information in a table format
-            Console.WriteLine("{0,-15}{1,-30}", "Id", movie.Id);
+            Console.WriteLine("{0,-15}{1,-30}", "Id", movie!.Id);
             Console.WriteLine("{0,-15}{1,-30}", "Title", movie.Title);
             Console.WriteLine("{0,-15}{1,-30}", "Year", movie.Year);
             Console.WriteLine("{0,-15}{1,-30}", "Director", movie.Director);
@@ -226,12 +226,12 @@ namespace MovieReviewConsoleApplication
             Movie? movie = context.Movies.Include(m => m.Reviews).FirstOrDefault(m => m.Id == movieId);
 
             // Display the movie information in a table format
-            Console.WriteLine("{0,-15}{1,-30}", "Id", movie.Id);
+            Console.WriteLine("{0,-15}{1,-30}", "Id", movie!.Id);
             Console.WriteLine("{0,-15}{1,-30}", "Title", movie.Title);
             Console.WriteLine("{0,-15}{1,-30}", "Year", movie.Year);
             Console.WriteLine("{0,-15}{1,-30}", "Director", movie.Director);
             Console.WriteLine("{0,-15}{1,-30}", "Country", movie.Country);
-            Console.WriteLine("{0,-15}{1,-30}", "Number of reviews", movie.Reviews.Count);
+            Console.WriteLine("{0,-15}{1,-30}", "Number of reviews", movie.Reviews!.Count);
             Console.WriteLine(new string('-', 45));
 
             // Prompt the user to confirm the deletion of the movie
@@ -239,7 +239,7 @@ namespace MovieReviewConsoleApplication
 
             // Get the user input and validate it
             string input = Console.ReadLine();
-            if (input.ToUpper() == "Y")
+            if (input!.ToUpper() == "Y")
             {
                 // If the user confirms the deletion, remove the movie from the database and save the changes
                 _ = context.Movies.Remove(movie);
@@ -273,7 +273,7 @@ namespace MovieReviewConsoleApplication
             Movie? movie = context.Movies.FirstOrDefault(m => m.Id == movieId);
 
             // Display the movie information in a table format
-            Console.WriteLine("{0,-15}{1,-30}", "Id", movie.Id);
+            Console.WriteLine("{0,-15}{1,-30}", "Id", movie!.Id);
             Console.WriteLine("{0,-15}{1,-30}", "Title", movie.Title);
             Console.WriteLine("{0,-15}{1,-30}", "Year", movie.Year);
             Console.WriteLine("{0,-15}{1,-30}", "Director", movie.Director);
@@ -344,7 +344,7 @@ namespace MovieReviewConsoleApplication
                 Movie? movie = context.Movies.FirstOrDefault(m => m.Id == movieId);
 
                 // Display the movie information in a table format
-                Console.WriteLine("{0,-15}{1,-30}", "Id", movie.Id);
+                Console.WriteLine("{0,-15}{1,-30}", "Id", movie!.Id);
                 Console.WriteLine("{0,-15}{1,-30}", "Title", movie.Title);
                 Console.WriteLine("{0,-15}{1,-30}", "Year", movie.Year);
                 Console.WriteLine("{0,-15}{1,-30}", "Director", movie.Director);
@@ -369,7 +369,7 @@ namespace MovieReviewConsoleApplication
 
                 // Get the user input and validate it
                 string input = Console.ReadLine();
-                if (input.ToUpper() == "N")
+                if (input!.ToUpper() == "N")
                 {
                     // If the user chooses to go to the next page, increment the current page and check if it is valid
                     currentPage++;
@@ -474,7 +474,7 @@ namespace MovieReviewConsoleApplication
 
             // Get the user input and validate it
             string input = Console.ReadLine();
-            if (input.ToUpper() == "A")
+            if (input!.ToUpper() == "A")
             {
                 // If the user chooses to filter by name, call another method to do so
                 FilterMoviesByName(context);
@@ -522,7 +522,7 @@ namespace MovieReviewConsoleApplication
             if (!string.IsNullOrWhiteSpace(name))
             {
                 // If the user enters a non-empty name, use the Contains method to perform a case-insensitive search
-                List<Movie> movies = context.Movies.Where(m => m.Title.Contains(name, StringComparison.OrdinalIgnoreCase)).ToList();
+                List<Movie> movies = context.Movies.Where(m => m.Title!.Contains(name, StringComparison.OrdinalIgnoreCase)).ToList();
 
                 // Check if any movies are found
                 if (movies.Count > 0)
@@ -591,7 +591,7 @@ namespace MovieReviewConsoleApplication
                         Console.WriteLine("No movies found with the given year.");
                     }
                 }
-                else if (year.Contains("-") && int.TryParse(year.Split("-")[0], out int startYear) && int.TryParse(year.Split("-")[1], out int endYear) && startYear > 0 && endYear > 0 && startYear <= endYear)
+                else if (year.Contains('-') && int.TryParse(year.Split("-")[0], out int startYear) && int.TryParse(year.Split("-")[1], out int endYear) && startYear > 0 && endYear > 0 && startYear <= endYear)
                 {
                     // If the year is a valid range of positive integers, use the Between method to perform a range match
                     List<Movie> movies = context.Movies.Where(m => m.Year.Between(startYear, endYear)).ToList();
@@ -646,7 +646,7 @@ namespace MovieReviewConsoleApplication
             if (!string.IsNullOrWhiteSpace(director))
             {
                 // If the user enters a non-empty director, use the Contains method to perform a case-insensitive search
-                List<Movie> movies = context.Movies.Where(m => m.Director.Contains(director, StringComparison.OrdinalIgnoreCase)).ToList();
+                List<Movie> movies = context.Movies.Where(m => m.Director!.Contains(director, StringComparison.OrdinalIgnoreCase)).ToList();
 
                 // Check if any movies are found
                 if (movies.Count > 0)
@@ -692,7 +692,7 @@ namespace MovieReviewConsoleApplication
             if (!string.IsNullOrWhiteSpace(nation))
             {
                 // If the user enters a non-empty nation, use the Contains method to perform a case-insensitive search
-                List<Movie> movies = context.Movies.Where(m => m.Country.Contains(nation, StringComparison.OrdinalIgnoreCase)).ToList();
+                List<Movie> movies = context.Movies.Where(m => m.Country!.Contains(nation, StringComparison.OrdinalIgnoreCase)).ToList();
 
                 // Check if any movies are found
                 if (movies.Count > 0)
@@ -771,54 +771,57 @@ namespace MovieReviewConsoleApplication
             }
         }
         // Main method to run the application
-        public static void Main(string[] args)
+        public static void Main()
         {
             // Create a connection string to connect to the database
-            string connectionString = "Server=(localdb)\\mssqllocaldb;Database=MovieReviewDb;Trusted_Connection=True;";
-
+            string connectionString
+            = @"Data Source= THIENLOC\\SQLEXPRESS;Initial Catalog=DANHGIAPHIM;Integrated Security=True;Encrypt=False; Trusted_Connection=True
+                                                 ;TrustServerCertificate=True";
             // Create a MovieReviewContext object to access the database
-            using MovieReviewContext context = new(connectionString);
-            
-            // Loop until the user chooses to exit the application
-            while (true)
+            using (MovieReviewContext context = new(connectionString))
             {
-                // Call the MainMenu method to display the main menu and get the user choice
-                int choice = MainMenu();
-
-                // Perform different actions based on the user choice
-                switch (choice)
+                
+                // Loop until the user chooses to exit the application
+                while (true)
                 {
-                    case 1:
-                        // If the user chooses to view list of movies, call the ViewMovies method
-                        ViewMovies(context);
-                        break;
-                    case 2:
-                        // If the user chooses to add new movie, call the AddMovie method
-                        AddMovie(context);
-                        break;
-                    case 3:
-                        // If the user chooses to filter movies by, call the FilterMovies method
-                        FilterMovies(context);
-                        break;
-                    case 4:
-                        //If the user chooses to import from JSON files
-                        // Ask the user to enter the directory path
-                        Console.WriteLine("Enter the directory path where the JSON files are located:");
+                    // Call the MainMenu method to display the main menu and get the user choice
+                    int choice = MainMenu();
 
-                        // Get the user input and store it in a string variable
-                        string? directory = Console.ReadLine();
+                    // Perform different actions based on the user choice
+                    switch (choice)
+                    {
+                        case 1:
+                            // If the user chooses to view list of movies, call the ViewMovies method
+                            ViewMovies(context);
+                            break;
+                        case 2:
+                            // If the user chooses to add new movie, call the AddMovie method
+                            AddMovie(context);
+                            break;
+                        case 3:
+                            // If the user chooses to filter movies by, call the FilterMovies method
+                            FilterMovies(context);
+                            break;
+                        case 4:
+                            //If the user chooses to import from JSON files
+                            // Ask the user to enter the directory path
+                            Console.WriteLine("Enter the directory path where the JSON files are located:");
 
-                        // Call the Seed method to populate the database with sample data from the user-inputted directory
-                        DatabaseSeeder.Seed(context, directory);
-                        break;
-                    case 5:
-                        // If the user chooses to exit the application, call the ExitApplication method
-                        ExitApplication();
-                        break;
-                    default:
-                        // If the user enters an invalid choice, display an error message and continue the loop
-                        Console.WriteLine("Invalid choice. Please try again.");
-                        break;
+                            // Get the user input and store it in a string variable
+                            string directory = Path.GetDirectoryName(@"E:\code\MovieReviewConsoleApplication-master\bin\Debug\net6.0\MOCK_DATA.json");
+
+                            // Call the Seed method to populate the database with sample data from the user-inputted directory
+                            DatabaseSeeder.Seed(context, directory);
+                            break;
+                        case 5:
+                            // If the user chooses to exit the application, call the ExitApplication method
+                            ExitApplication();
+                            break;
+                        default:
+                            // If the user enters an invalid choice, display an error message and continue the loop
+                            Console.WriteLine("Invalid choice. Please try again.");
+                            break;
+                    }
                 }
             }
         }
